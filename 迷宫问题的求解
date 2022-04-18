@@ -1,0 +1,270 @@
+#include<stdio.h>
+#include<stdlib.h>
+//设计迷宫路径存储的栈链结构
+struct node
+{
+	int i,j;
+	char d;
+	struct node *next;
+};
+typedef struct node NODE;
+//将栈链初始化
+void Initstack(NODE *&L)
+{L=NULL;}
+//将迷宫路径进栈
+int push(NODE *&L,int i,int j,char d)
+{
+	NODE *p;
+	p=new node;
+	if(p==NULL)exit(-1);
+	p->i=i;
+	p->j=j;
+	p->d=d;
+	p->next=L;
+	L=p;
+	return 1;
+}
+//将迷宫路径出栈（坐标与方向）
+int pop1(NODE *&L,int &x,int &y,char &d)
+{
+	NODE *p;
+	if(L==NULL) return -1;
+	x=L->i;
+	y=L->j;
+	d=L->d;
+	p=L;
+	L=L->next;
+	free(p);
+	return 1;
+}
+//将迷宫路径出栈（坐标）
+int pop2(NODE *&L,int &x,int &y)
+{
+	NODE *p;
+	if(L==NULL) return -1;
+	x=L->i;
+	y=L->j;
+	p=L;
+	L=L->next;
+	free(p);
+	return 1;
+}
+//销毁该栈链
+int destroy(NODE *&L)
+{
+	NODE *p;
+	p=L;
+	L=L->next;
+	free(p);
+	return 1;
+}
+//将数组下标跳转为指定下标
+int tz(int &i,int &j,char d,int n,int m)
+{
+	if(d=='w')
+	{j--;}
+	else if(d=='e')
+	{j++;}
+	else if(d=='n')
+	{i--;}
+	else if(d=='s')
+	{i++;}
+	else if(d=='t')
+	{i=n-1;j=m-1;}
+	return 0;
+}
+//判断此方向的路径是否为通路
+int pd(int a)
+{
+	if(a==0)
+	{return 1;}
+	else 
+	{return 0;}
+}
+//主程序
+int main()
+{
+	NODE *L;
+	L=new node;
+	int n,m,i,j,x,y,t=0,k1=0,k2=0,s=1;
+	char d='0',f='0';
+	int a[20][20],b[20][20];
+	Initstack(L);
+	printf("请输入迷宫规模:\n");
+	scanf("%d %d",&n,&m);
+	if(n<=0||m<=0)
+	{printf("此输入错误\n");}
+	else if(n==1&&m==1)
+	{printf("该规模构不成迷宫\n");}
+	else
+	{
+		
+	printf("请输入迷宫:\n");
+	for(i=0;i<n;i++){
+		for(j=0;j<m;j++){
+			scanf("%d",&a[i][j]);
+			b[i][j]=a[i][j];
+		}}
+	printf("入口：(0,0);出口：(%d,%d)\n",n-1,m-1);
+	printf("方向d为：w、西；e、东；n、北；s、南\n");
+	i--;
+	j--;
+	while(i!=0||j!=0)//求解迷宫路径和选择方向
+	{
+		if(i==n-1&&j==m-1)
+		{
+			push(L,i,j,f);
+			s=pd(b[i][j-1]);
+			s=s+pd(b[i-1][j]);
+			if(a[i][j-1]==0&&b[i][j-1]==0){d='w';f='e';}
+			else if(a[i-1][j]==0&&b[i-1][j]==0){d='n';f='s';}
+			else if(s==0){i=0;j=0;t++;}
+	if(t==0)
+	{b[i][j]=1;tz(i,j,d,n,m);}
+		}
+		else
+		{
+				push(L,i,j,f);
+			if(i==n-1&&j!=0)
+			{
+				s=pd(b[i][j-1]);
+				s=s+pd(b[i-1][j]);
+				if(a[i][j-1]==0&&b[i][j-1]==0){d='w';f='e';}
+				else if(a[i-1][j]==0&&b[i-1][j]==0){d='n';f='s';}
+				else if(s==0)
+				{
+					a[i][j]=1;
+					for(k1=0;k1<n;k1++){
+						for(k2=0;k2<m;k2++){
+							b[k1][k2]=a[k1][k2];}}
+					d='t';
+					while(L!=NULL)
+					{destroy(L);}
+					L=new node;
+					Initstack(L);
+				}
+			}
+			else if(i==n-1&&j==0)
+			{
+				s=pd(b[i-1][j]);
+				if(a[i-1][j]==0&&b[i-1][j]==0){d='n';f='s';}
+				else if(s==0)
+				{
+					a[i][j]=1;
+					for(k1=0;k1<n;k1++){
+						for(k2=0;k2<m;k2++){
+							b[k1][k2]=a[k1][k2];}};
+					d='t';
+					while(L!=NULL)
+					{destroy(L);}
+					L=new node;
+					Initstack(L);
+				}
+			}
+			else if(i==0)
+			{
+				s=pd(b[i][j-1]);
+				s=s+pd(b[i+1][j]);
+				if(a[i][j-1]==0&&b[i][j-1]==0){d='w';f='e';}
+				else if(a[i+1][j]==0&&b[i+1][j]==0){d='s';f='n';}
+				else if(s==0)
+				{
+					a[i][j]=1;
+					for(k1=0;k1<n;k1++){
+						for(k2=0;k2<m;k2++){
+							b[k1][k2]=a[k1][k2];}}
+					d='t';
+					while(L!=NULL)
+					{destroy(L);}
+					L=new node;
+					Initstack(L);
+				}
+			}
+			else if(j==m-1)
+			{
+				s=pd(b[i][j-1]);
+				s=s+pd(b[i-1][j]);
+				if(a[i][j-1]==0&&b[i][j-1]==0){d='w';f='e';}
+				else if(a[i-1][j]==0&&b[i-1][j]==0){d='n';f='s';}
+				else if(s==0)
+				{
+					a[i][j]=1;
+					for(k1=0;k1<n;k1++){
+						for(k2=0;k2<m;k2++){
+							b[k1][k2]=a[k1][k2];}}
+					d='t';
+					while(L!=NULL)
+					{destroy(L);}
+					L=new node;
+					Initstack(L);
+				}
+			}
+			else if(j==0&&i!=n-1)
+			{
+				s=pd(b[i-1][j]);
+				s=s+pd(b[i][j+1]);
+				if(a[i-1][j]==0&&b[i-1][j]==0){d='n';f='s';}
+				else if(a[i][j+1]==0&&b[i][j+1]==0){d='e';f='w';}
+				else if(s==0)
+				{
+					a[i][j]=1;
+					for(k1=0;k1<n;k1++){
+						for(k2=0;k2<m;k2++){
+							b[k1][k2]=a[k1][k2];}}
+					d='t';
+					while(L!=NULL)
+					{destroy(L);}
+					L=new node;
+					Initstack(L);
+				}
+			}
+			else
+			{
+				s=pd(b[i][j-1]);
+				s=s+pd(b[i-1][j]);
+				s=s+pd(b[i][j+1]);
+				s=s+pd(b[i+1][j]);
+				if(a[i][j-1]==0&&b[i][j-1]==0){d='w';f='e';}
+				else if(a[i-1][j]==0&&b[i-1][j]==0){d='n';f='s';}
+				else if(a[i][j+1]==0&&b[i][j+1]==0){d='e';f='w';}
+				else if(a[i+1][j]==0&&b[i+1][j]==0){d='s';f='n';}
+				else if(s==0)
+				{
+					a[i][j]=1;
+					for(k1=0;k1<n;k1++){
+						for(k2=0;k2<m;k2++){
+							b[k1][k2]=a[k1][k2];}}
+					d='t';
+					while(L!=NULL)
+					{destroy(L);}
+					L=new node;
+					Initstack(L);
+				}
+			}
+			if(t==0){b[i][j]=1;tz(i,j,d,n,m);}
+		}
+}
+	if(t==0)
+	{
+	push(L,i,j,f);
+	while(L!=NULL)
+	{
+		if(L->next==NULL)
+		{L->d='0';}
+		if(L->d=='0')
+		{
+			pop2(L,x,y);
+			printf("(%d,%d)\n",x,y); 
+		}
+		else
+		{
+			pop1(L,x,y,d);
+			printf("(%d,%d,%c)\n",x,y,d); 
+		}
+	}
+	}
+	else 
+	{printf("该迷宫没有通路");}
+	}
+	system("pause");
+	return 0;
