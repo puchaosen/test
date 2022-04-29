@@ -456,7 +456,10 @@ public class operation {
 	void move(int j){
 		if(j==1){
 		n-=2;
-		topic[g-1]=Integer.toString(s);
+		if(radiobutton_4.isSelected())
+			topic[g-1]=String.valueOf(s_1);
+		else
+			topic[g-1]=Integer.toString(s);
 		for(int i=g;i<n;i++){
 			topic[i]=topic[i+2];
 		}}
