@@ -478,8 +478,8 @@ public class operation {
 			num[h]=g;
 			h++;
 			g++;
-			if(kh()){}
-			else if(chengchu()){}
+			if(g!=n-1&&kh()){}
+			else if(g!=n-1&&chengchu()){}
 				h--;
 				g=num[h];
 				if(radiobutton_4.isSelected())
@@ -493,8 +493,8 @@ public class operation {
 			num[h]=g;
 			h++;
 			g++;
-			if(kh()){}
-			else if(chengchu()){}
+			if(g!=n-1&&kh()){}
+			else if(g!=n-1&&chengchu()){}
 				h--;
 				g=num[h];
 				if(radiobutton_4.isSelected())
@@ -519,7 +519,7 @@ public class operation {
 			num[h]=g;
 			h++;
 			g++;
-			if(kh()){}
+			if(g!=n-1&&kh()){}
 				h--;
 				g=num[h];
 				if(radiobutton_4.isSelected())
@@ -538,7 +538,7 @@ public class operation {
 			num[h]=g;
 			h++;
 			g++;
-			if(kh()){}
+			if(g!=n-1&&kh()){}
 				h--;
 				g=num[h];
 				if(!radiobutton_4.isSelected()&&Integer.parseInt(topic[g+1])==0||radiobutton_4.isSelected()&&Double.parseDouble(topic[g+1])==0)
@@ -562,7 +562,7 @@ public class operation {
 	boolean kh(){
 		if(judge_sz(g))
 		     g++;
-		if(topic[g].equals("(")){
+		if(g!=n-1&&topic[g].equals("(")){
 			move(2);
 			while(order_1){
 				if(judge_sz(g))
