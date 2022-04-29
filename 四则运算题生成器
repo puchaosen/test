@@ -56,7 +56,7 @@ public class operation {
 	int g=0,h=0;
 	int ok=0;
 	double s_1=0.0;
-	boolean order_1=false,order_2=true;
+	boolean order_1=true;
 	
 //创建用户界面
 	public operation(){
@@ -286,7 +286,7 @@ public class operation {
 			writeTxtFile(text.getText(),path);
 		}
 		else if(radiobutton_2.isSelected()){
-		String name=URLDecoder.decode(PrintDemo.class.getProtectionDomain().getCodeSource().getLocation().getFile(),"UTF-8")+"/四则运算练习题.docx";
+		String name=URLDecoder.decode(operation.class.getProtectionDomain().getCodeSource().getLocation().getFile(),"UTF-8")+"/四则运算练习题.docx";
 		creatTxtFile(name);
 		writeTxtFile(text.getText(),name);
 		printer(name);
@@ -390,7 +390,7 @@ public class operation {
 		 g=0;h=0;
 		 t=0;
 		 n=0;
-		 order_1=false;order_2=true;
+		 order_1=true;
 		 N=0;
 		 m=1;
 		 question="";
@@ -500,9 +500,9 @@ public class operation {
 					s=Integer.parseInt(topic[g-1])-Integer.parseInt(topic[g+1]);
 			    move(1);
 			    if(!radiobutton_4.isSelected()&&!checkBox_5.isSelected()&&s<0)
-			    	order_2=false;
+			    	order_1=false;
 			    else if(radiobutton_4.isSelected()&&!checkBox_5.isSelected()&&s_1<0)
-			    	order_2=false;
+			    	order_1=false;
 			    return true;
 		}
 		return false;
@@ -539,7 +539,7 @@ public class operation {
 				h--;
 				g=num[h];
 				if(!radiobutton_4.isSelected()&&Integer.parseInt(topic[g+1])==0||radiobutton_4.isSelected()&&Double.parseDouble(topic[g+1])==0)
-					order_2=false;
+					order_1=false;
 				else{
 					if(radiobutton_4.isSelected())
 						s_1=Double.parseDouble(topic[g-1])/Double.parseDouble(topic[g+1]);
@@ -561,7 +561,7 @@ public class operation {
 		     g++;
 		if(topic[g].equals("(")){
 			move(2);
-			while(order_2){
+			while(order_1){
 				if(judge_sz(g))
 				     g++;
 			    if(topic[g].equals("("))
@@ -591,7 +591,7 @@ public class operation {
 				chengchu();
 			else if(judge_jiajian(g))
 					jiajian();
-			if(!order_2)
+			if(!order_1)
 				break;
 			if(g==n-1)
 				g=0;
@@ -611,10 +611,10 @@ public class operation {
 	}
 	//判断计算是否正确
 	boolean saomiao_js(){
-		order_2=true;
+		order_1=true;
 		keep();
 		answer();
-		if(!order_2)
+		if(!order_1)
 			return false;
 		else
 			return true;
@@ -759,7 +759,7 @@ public class operation {
 		}
 	}
 	//创造练习题
-	boolean creat(){
+	void creat(){
 		  g=0;
 		  while(true){ 
 			  if(checkBox_kh.isSelected())
@@ -783,22 +783,19 @@ public class operation {
 			else
 				g=0;	
 			}
-		return true;
 	}
 	//按规定生成练习题
 	void build(){
 		while(t<N){
-			order_1=creat();
-		if(order_1){
-			question=question.concat(Integer.toString(t+1)).concat(".     ");
-			for(int j=0;j<n_;j++){
-				question=question.concat(topic_[j]);
+		creat();
+		question=question.concat(Integer.toString(t+1)).concat(".     ");
+		for(int j=0;j<n_;j++){
+			question=question.concat(topic_[j]);
 			}
-			question=question.concat("=\n");
-			text.setText(text.getText()+question);
-		    t++;
-		}
-		order_1=false;order_2=true;g=0;question="";
+		question=question.concat("=\n");
+		text.setText(text.getText()+question);
+		order_1=true;g=0;question="";
+		t++;
 		}
 	}
 	//主程序
@@ -806,4 +803,4 @@ public class operation {
 	    
 		new operation();
 	}
-}
+}	
