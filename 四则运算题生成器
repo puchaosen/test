@@ -225,6 +225,10 @@ public class operation {
 						JOptionPane.showMessageDialog(null, "请输入数的正确范围", "提示", JOptionPane.INFORMATION_MESSAGE);
 					    option++;
 					    }
+					else if(text_2.getText().equals("0")&&text_3.getText().equals("0")&&checkBox_4.isSelected()){
+						JOptionPane.showMessageDialog(null, "该情况无法生成练习题", "提示", JOptionPane.INFORMATION_MESSAGE);
+					    option++;
+					}
 					if(!checkBox_5.isSelected()&&Integer.parseInt(text_2.getText())<0||!checkBox_5.isSelected()&&Integer.parseInt(text_3.getText())<0){
 						JOptionPane.showMessageDialog(null, "没有选择负数情况", "提示", JOptionPane.INFORMATION_MESSAGE);
 					    option++;
@@ -600,10 +604,6 @@ public class operation {
 				g=0;
 			
 		}
-		if(radiobutton_4.isSelected())
-			s_1=Double.parseDouble(topic[0]);
-		else
-		    s=Integer.parseInt(topic[0]);
 	}
 	//保存练习题
 	void keep(){
