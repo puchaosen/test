@@ -226,7 +226,6 @@ public class operation {
         radiobutton_2.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
         		text_4.setText("输入文件地址");
-        		ok=0;
         		text_4.setEditable(false);
         	}
         });
