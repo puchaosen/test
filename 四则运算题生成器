@@ -1,6 +1,8 @@
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
@@ -94,6 +96,14 @@ public class operation {
 		text_1=new JTextField();
 		text_1.setEditable(true);
 		pane_2_1.add(text_1);
+		text_1.addKeyListener(new KeyAdapter(){
+			public void keyTyped(KeyEvent e) {			
+				if(e.getKeyChar() >= KeyEvent.VK_0 && e.getKeyChar() <= KeyEvent.VK_9){}
+				else{
+					e.consume();
+				}
+			}
+		});
 		
 		JPanel pane_2_2=new JPanel();
 		pane_2_2.setLayout(new GridLayout(1,4)); 
@@ -131,6 +141,16 @@ public class operation {
 		text_2=new JTextField();
 		text_2.setEditable(true);
 		pane_2_3.add(text_2);
+		text_2.addKeyListener(new KeyAdapter(){
+			public void keyTyped(KeyEvent e) {			
+				if(e.getKeyChar()>= KeyEvent.VK_0 &&e.getKeyChar()<= KeyEvent.VK_9){}
+				else if(checkBox_5.isSelected()&&text_2.getCaretPosition()==0&&e.getKeyChar()=='-'){}
+				else if(radiobutton_4.isSelected()&&!text_2.getText().isEmpty()&&!text_2.getText().contains(".")&&e.getKeyChar()=='.'){}
+				else{
+					e.consume();
+				}
+			}
+		});
 		
 		text_max=new JTextField("最大值");
 		text_max.setEditable(false);
@@ -139,6 +159,16 @@ public class operation {
 		text_3=new JTextField();
 		text_3.setEditable(true);
 		pane_2_3.add(text_3);
+		text_3.addKeyListener(new KeyAdapter(){
+			public void keyTyped(KeyEvent e) {			
+				if(e.getKeyChar()>= KeyEvent.VK_0 &&e.getKeyChar()<= KeyEvent.VK_9){}
+				else if(checkBox_5.isSelected()&&text_3.getCaretPosition()==0&&e.getKeyChar()=='-'){}
+				else if(radiobutton_4.isSelected()&&!text_3.getText().isEmpty()&&!text_3.getText().contains(".")&&e.getKeyChar()=='.'){}
+				else{
+					e.consume();
+				}
+			}
+		});
 		
 		JPanel pane_2_4=new JPanel();
 		pane_2_4.setLayout(new GridLayout(1,6)); 
@@ -183,7 +213,7 @@ public class operation {
 		text_4.setEditable(false);
 		pane_2_5.add(text_4);
 		text_4.addMouseListener(new MouseListener(){
-			public void mouseClicked(MouseEvent e) {if(radiobutton_1.isSelected()&&ok==0){text_4.setText("");ok++;}}
+			public void mouseClicked(MouseEvent e) {if(radiobutton_1.isSelected()&&e.getClickCount()==1){text_4.setText("");}}
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseExited(MouseEvent e) {}
 			public void mousePressed(MouseEvent e) {}
@@ -212,25 +242,17 @@ public class operation {
 				int option=0;
 				text.setText("");
 				rest();
-				if(text_1.getText().equals("")){
+				if(text_1.getText().isEmpty()){
 					JOptionPane.showMessageDialog(null, "请输入运算题数量", "提示", JOptionPane.INFORMATION_MESSAGE);
 				    option++;
 				}
-				if(text_2.getText().equals("")||text_3.getText().equals("")){
+				if(text_2.getText().isEmpty()||text_3.getText().equals("")){
 					JOptionPane.showMessageDialog(null, "请输入数最大值或最小值", "提示", JOptionPane.INFORMATION_MESSAGE);
 					option++;
 		        }
 				else{
-					if(Integer.parseInt(text_2.getText())>Integer.parseInt(text_3.getText())){
+					if(Double.parseDouble(text_2.getText())>Double.parseDouble(text_3.getText())){
 						JOptionPane.showMessageDialog(null, "请输入数的正确范围", "提示", JOptionPane.INFORMATION_MESSAGE);
-					    option++;
-					    }
-					else if(text_2.getText().equals("0")&&text_3.getText().equals("0")&&checkBox_4.isSelected()){
-						JOptionPane.showMessageDialog(null, "该情况无法生成练习题", "提示", JOptionPane.INFORMATION_MESSAGE);
-					    option++;
-					}
-					if(!checkBox_5.isSelected()&&Integer.parseInt(text_2.getText())<0||!checkBox_5.isSelected()&&Integer.parseInt(text_3.getText())<0){
-						JOptionPane.showMessageDialog(null, "没有选择负数情况", "提示", JOptionPane.INFORMATION_MESSAGE);
 					    option++;
 					    }
 					}
@@ -240,8 +262,9 @@ public class operation {
 				}
 				if(option==0){
 					creat_operator();
-					N=Integer.parseInt(text_1.getText());
-					build();
+					if(m==1)
+						JOptionPane.showMessageDialog(null, "该情况无法生成练习题", "提示", JOptionPane.INFORMATION_MESSAGE);
+					else{N=Integer.parseInt(text_1.getText());build();}
 				}
 			}
 		});
@@ -263,9 +286,9 @@ public class operation {
 			{
 				if(!radiobutton_1.isSelected()&&!radiobutton_2.isSelected())
 					JOptionPane.showMessageDialog(null, "请选择输出方式", "提示", JOptionPane.INFORMATION_MESSAGE);
-				else if(text.getText().equals(""))
+				else if(text.getText().isEmpty())
 					JOptionPane.showMessageDialog(null, "请先生成运算题", "提示", JOptionPane.INFORMATION_MESSAGE);
-				else if(text_4.getText().equals(""))
+				else if(text_4.getText().isEmpty())
 					JOptionPane.showMessageDialog(null, "文件地址为空", "提示", JOptionPane.INFORMATION_MESSAGE);
 				else{
 				try {
@@ -404,16 +427,14 @@ public class operation {
 	//创建符号数组
 	void creat_operator(){
 		m=1;
-		if(checkBox_1.isSelected())
-		{operator[m]=checkBox_1.getText();m++;}
-		if(checkBox_2.isSelected())
-		{operator[m]=checkBox_2.getText();m++;}
-		if(checkBox_3.isSelected())
-		{operator[m]=checkBox_3.getText();m++;}
-		if(checkBox_4.isSelected())
-		{operator[m]=checkBox_4.getText();m++;}
-		if(checkBox_kh.isSelected())
-		{operator[m]="(";operator[m+1]=")";m+=2;}
+		if(checkBox_1.isSelected()){operator[m]=checkBox_1.getText();m++;}
+		if(checkBox_2.isSelected()){operator[m]=checkBox_2.getText();m++;}
+		if(checkBox_3.isSelected()){operator[m]=checkBox_3.getText();m++;}
+		if(checkBox_4.isSelected()){
+			if(Double.parseDouble(text_2.getText())==0&&Double.parseDouble(text_3.getText())==0){}
+			else{operator[m]=checkBox_4.getText();m++;}
+			}
+		if(checkBox_kh.isSelected()){operator[m]="(";operator[m+1]=")";m+=2;}
 	}
 	//判断是否是数字
 	boolean judge_sz(int j){
@@ -602,7 +623,6 @@ public class operation {
 				break;
 			if(g==n-1)
 				g=0;
-			
 		}
 	}
 	//保存练习题
@@ -806,4 +826,4 @@ public class operation {
 	    
 		new operation();
 	}
-}	
+}
