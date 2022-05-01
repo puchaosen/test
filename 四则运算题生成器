@@ -3,8 +3,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,11 +53,12 @@ public class operation {
 	String path="";
 	String question="";
 	int n=0,n_=0;
-	int s=0,m=1;
+	int m=1;
 	int t=0,N=0;
-	int g=0,h=0;
+	int e=0,f=0,g=0,h=0;
 	int ok=0;
-	double s_1=0.0;
+	int z1=0,z2=0;
+	double s=0.0;
 	boolean order_1=true;
 	
 //创建用户界面
@@ -99,9 +100,8 @@ public class operation {
 		text_1.addKeyListener(new KeyAdapter(){
 			public void keyTyped(KeyEvent e) {			
 				if(e.getKeyChar() >= KeyEvent.VK_0 && e.getKeyChar() <= KeyEvent.VK_9){}
-				else{
+				else
 					e.consume();
-				}
 			}
 		});
 		
@@ -146,9 +146,8 @@ public class operation {
 				if(e.getKeyChar()>= KeyEvent.VK_0 &&e.getKeyChar()<= KeyEvent.VK_9){}
 				else if(checkBox_5.isSelected()&&text_2.getCaretPosition()==0&&e.getKeyChar()=='-'){}
 				else if(radiobutton_4.isSelected()&&!text_2.getText().isEmpty()&&!text_2.getText().contains(".")&&e.getKeyChar()=='.'){}
-				else{
+				else
 					e.consume();
-				}
 			}
 		});
 		
@@ -164,9 +163,8 @@ public class operation {
 				if(e.getKeyChar()>= KeyEvent.VK_0 &&e.getKeyChar()<= KeyEvent.VK_9){}
 				else if(checkBox_5.isSelected()&&text_3.getCaretPosition()==0&&e.getKeyChar()=='-'){}
 				else if(radiobutton_4.isSelected()&&!text_3.getText().isEmpty()&&!text_3.getText().contains(".")&&e.getKeyChar()=='.'){}
-				else{
+				else
 					e.consume();
-				}
 			}
 		});
 		
@@ -180,18 +178,23 @@ public class operation {
 		
 		checkBox_1 = new JCheckBox("＋");
 		pane_2_4.add(checkBox_1);
+		checkBox_1.addMouseListener(new MouseAdapter() {public void mouseClicked(MouseEvent e){choose_kh_rule();}});
 		
 		checkBox_2 = new JCheckBox("－");
 		pane_2_4.add(checkBox_2);
+		checkBox_2.addMouseListener(new MouseAdapter() {public void mouseClicked(MouseEvent e){choose_kh_rule();}});
 		
 		checkBox_3 = new JCheckBox("×");
 		pane_2_4.add(checkBox_3);
+		checkBox_3.addMouseListener(new MouseAdapter() {public void mouseClicked(MouseEvent e){choose_kh_rule();}});
 		
 		checkBox_4 = new JCheckBox("÷");
 		pane_2_4.add(checkBox_4);
+		checkBox_4.addMouseListener(new MouseAdapter() {public void mouseClicked(MouseEvent e){choose_kh_rule();}});
 		
 		checkBox_kh = new JCheckBox("括号");
 		pane_2_4.add(checkBox_kh);
+		checkBox_kh.addMouseListener(new MouseAdapter() {public void mouseClicked(MouseEvent e){choose_kh_rule();}});
 		
 		JPanel pane_2_5=new JPanel();
 		pane_2_5.setLayout(new GridLayout(1,3)); 
@@ -201,24 +204,12 @@ public class operation {
         radiobutton_1 = new JRadioButton("输出到文件");       
         buttongroup.add(radiobutton_1);                    
         pane_2_5.add(radiobutton_1); 
-        radiobutton_1.addActionListener(new ActionListener(){
-        	public void actionPerformed(ActionEvent e){
-        		text_4.setEditable(true);
-        		
-        	}
-        	
-        });
+        radiobutton_1.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){text_4.setEditable(true);}});
         
         text_4=new JTextField("输入文件地址");
 		text_4.setEditable(false);
 		pane_2_5.add(text_4);
-		text_4.addMouseListener(new MouseListener(){
-			public void mouseClicked(MouseEvent e) {if(radiobutton_1.isSelected()&&e.getClickCount()==1){text_4.setText("");}}
-			public void mouseEntered(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {}
-			public void mouseReleased(MouseEvent e) {}
-				});
+		text_4.addMouseListener(new MouseAdapter(){public void mouseClicked(MouseEvent e) {if(text_4.getText().equals("输入文件地址")){text_4.setText("");}}});
         
         radiobutton_2 = new JRadioButton("输出到打印机");
         buttongroup.add(radiobutton_2);
@@ -227,8 +218,7 @@ public class operation {
         	public void actionPerformed(ActionEvent e){
         		text_4.setText("输入文件地址");
         		text_4.setEditable(false);
-        	}
-        });
+        	}});
 		
 		JPanel pane_2_6=new JPanel();
 		pane_2_6.setLayout(new GridLayout(1,3)); 
@@ -410,6 +400,24 @@ public class operation {
 			}
 		}
 	}
+	//括号选择规则
+	void choose_kh_rule(){
+		int x=0,y=0;
+		if(checkBox_1.isSelected())
+			x++;
+		if(checkBox_2.isSelected())
+			x++;
+		if(checkBox_3.isSelected())
+			y++;
+		if(checkBox_4.isSelected())
+			y++;
+		if(checkBox_kh.isSelected()){
+			if(x>=1&&y>=1)
+				checkBox_kh.setSelected(true);
+			else
+				checkBox_kh.setSelected(false);
+			}
+	}
 	//重置数值
 	void rest(){
 		 g=0;h=0;
@@ -479,10 +487,7 @@ public class operation {
 	void move(int j){
 		if(j==1){
 		n-=2;
-		if(radiobutton_4.isSelected())
-			topic[g-1]=String.valueOf(s_1);
-		else
-			topic[g-1]=Integer.toString(s);
+		topic[g-1]=String.valueOf(s);
 		for(int i=g;i<n;i++){
 			topic[i]=topic[i+2];
 		}}
@@ -495,39 +500,28 @@ public class operation {
 	}
 	//加减计算
 	boolean jiajian(){
+		int i;
 		if(judge_sz(g))
 		     g++;
 		if(topic[g].equals("＋")){
-			num[h]=g;
-			h++;
+			i=g;
 			g++;
 			if(g!=n-1&&kh()){}
 			else if(g!=n-1&&chengchu()){}
-				h--;
-				g=num[h];
-				if(radiobutton_4.isSelected())
-					s_1=Double.parseDouble(topic[g-1])+Double.parseDouble(topic[g+1]);
-				else
-					s=Integer.parseInt(topic[g-1])+Integer.parseInt(topic[g+1]);
+				g=i;
+				s=Double.parseDouble(topic[g-1])+Double.parseDouble(topic[g+1]);
 				move(1);
 				return true;
 		}
 		else if(topic[g].equals("－")){
-			num[h]=g;
-			h++;
+			i=g;
 			g++;
 			if(g!=n-1&&kh()){}
 			else if(g!=n-1&&chengchu()){}
-				h--;
-				g=num[h];
-				if(radiobutton_4.isSelected())
-					s_1=Double.parseDouble(topic[g-1])-Double.parseDouble(topic[g+1]);
-				else
-					s=Integer.parseInt(topic[g-1])-Integer.parseInt(topic[g+1]);
+				g=i;
+				s=Double.parseDouble(topic[g-1])-Double.parseDouble(topic[g+1]);
 			    move(1);
-			    if(!radiobutton_4.isSelected()&&!checkBox_5.isSelected()&&s<0)
-			    	order_1=false;
-			    else if(radiobutton_4.isSelected()&&!checkBox_5.isSelected()&&s_1<0)
+			    if(!checkBox_5.isSelected()&&s<0)
 			    	order_1=false;
 			    return true;
 		}
@@ -536,19 +530,15 @@ public class operation {
 	}
 	//乘除计算
 	boolean chengchu(){
+		int i;
 		if(judge_sz(g))
 		     g++;
 		if(topic[g].equals("×")){
-			num[h]=g;
-			h++;
+			i=g;
 			g++;
 			if(g!=n-1&&kh()){}
-				h--;
-				g=num[h];
-				if(radiobutton_4.isSelected())
-					s_1=Double.parseDouble(topic[g-1])*Double.parseDouble(topic[g+1]);
-				else
-					s=Integer.parseInt(topic[g-1])*Integer.parseInt(topic[g+1]);
+				g=i;
+					s=Double.parseDouble(topic[g-1])*Double.parseDouble(topic[g+1]);
 			    move(1);
 			    if(g!=n-1){
 			    	if(judge_chengchu(g+1)&&chengchu())
@@ -558,19 +548,14 @@ public class operation {
 			
 		}
 		else if(topic[g].equals("÷")){
-			num[h]=g;
-			h++;
+			i=g;
 			g++;
 			if(g!=n-1&&kh()){}
-				h--;
-				g=num[h];
-				if(!radiobutton_4.isSelected()&&Integer.parseInt(topic[g+1])==0||radiobutton_4.isSelected()&&Double.parseDouble(topic[g+1])==0)
+				g=i;
+				if(Double.parseDouble(topic[g+1])==0)
 					order_1=false;
 				else{
-					if(radiobutton_4.isSelected())
-						s_1=Double.parseDouble(topic[g-1])/Double.parseDouble(topic[g+1]);
-					else
-						s=Integer.parseInt(topic[g-1])/Integer.parseInt(topic[g+1]);
+					s=Double.parseDouble(topic[g-1])/Double.parseDouble(topic[g+1]);
 				    move(1);
 				    if(g!=n-1){
 				    	if(judge_chengchu(g+1)&&chengchu())
@@ -623,10 +608,10 @@ public class operation {
 				g=0;
 		}
 	}
-	//保存练习题
+	//保持数据
 	void keep(){
 		n_=n;
-		for(int i=0;i<n_;i++){
+		for(int i=0;i<n;i++){
 			topic_[i]=topic[i];
 		}
 	}
@@ -649,8 +634,8 @@ public class operation {
 			}
 			else if(judge_kh2(h)){
 				if(ok==1){
-				num[s]=h;
-				s+=1;
+				num[f]=h;
+				f+=1;
 				}
 				return true;
 			}
@@ -670,46 +655,81 @@ public class operation {
 		return false;	
 	}
 	//删除重复括号
-	boolean delete_dykh_1(){
+	void delete_dykh_1(){
 		int x,y,z;
-		ok=1;
 			for(int i=0;i<n;i++){
 				 if(i!=n-1&&judge_kh1(i)&&judge_kh1(i+1)){
 					 x=0;y=0;z=0;
-					 s=0;
+					 f=0;
 					 kh_rule1(i+1);
-					 x=s;
-					 z=num[s-1];
-					 s=0;
+					 x=f;
+					 z=num[f-1];
+					 f=0;
 					 kh_rule1(i+2);
-					 y=s;
+					 y=f;
 					 if(x-y==1&&judge_kh2(z-1)){
-						 System.out.println();
 						g=z;move(2);count[m-1]--;
 						 g=i;move(2);count[m-2]--; 
 						 i--;
 						 }
 					 } 
 				  }
-			ok=0;
+	}
+	//删除无意义括号
+	boolean delete_dykh_2(int y){
+		int x,i;
+		boolean real=false;
+			for(e=y;e<n;e++){
+				 if(judge_kh1(e)){
+					 i=e;
+					 real=delete_dykh_2(e+1);
+					 e=i;
+					 f=0;
+					 kh_rule1(e+1);
+					 x=num[f-1];
+					 if(real||kh_meaning(e+1,x)){
+						 int z=0;
+						 if(e==0&&x==n-1||e==0&&judge_jiajian(x+1)||x==n-1&&judge_jiajian(e-1))
+							 z++;
+						 else if(e!=0&&x!=n-1){
+							 if(judge_jiajian(e-1)&&judge_jiajian(x+1)||judge_jiajian(e-1)&&judge_kh2(x+1)||judge_kh1(e-1)&&judge_jiajian(x+1))
+								 z++;
+						 }
+						 else if(z1==0&&z2!=0)
+							 z++;
+						 if(z!=0){
+							 g=x;move(2);count[m-1]--;
+							 g=e;move(2);count[m-2]--;
+						 }
+					 }
+				}
+				 else if(judge_kh2(e))
+					 return false;
+				  }
 			return true;
 	}
-	//删除首尾多余括号
-	boolean delete_dykh_2(){
-		if(judge_kh1(0)&&judge_kh2(n-1)){
-			s=0;ok=1;
-			if(kh_rule1(1)&&num[s-1]==n-1){
-				g=0;move(2);count[m-2]--;
-				g=n-1;move(2);count[m-1]--;
-				}
-			ok=0;
+	//判断括号内计算符号的意义
+	boolean kh_meaning(int x,int y){
+		z1=0;z2=0;
+		for(int i=x;i<y;i++){
+			if(judge_jiajian(i))
+				z1++;
+			else if(judge_chengchu(i))
+				z2++;
 		}
-			return true;
+		 if(z1!=0||z1==0&&z2!=0)
+			 return true;	
+		 else 
+			 return false;
 	}
 	//删除括号
 	boolean delete_kh(){
 		if(checkBox_kh.isSelected()){
-		   if(delete_dykh_1()&&delete_dykh_2()){}
+		   ok=1;
+		   delete_dykh_1();
+		   e=0;
+		   while(e<n){delete_dykh_2(e);e++;}
+		   ok=0;
 		   if(count[m-1]==0&&count[m-2]==0)
 			return false;
 		}
