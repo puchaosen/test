@@ -56,10 +56,9 @@ public class operation {
 	int m=1;
 	int t=0,N=0;
 	int e=0,f=0,g=0,h=0;
-	int ok=0;
 	int z1=0,z2=0;
 	double s=0.0;
-	boolean order_1=true;
+	boolean order=true;
 	
 //创建用户界面
 	public operation(){
@@ -423,7 +422,7 @@ public class operation {
 		 g=0;h=0;
 		 t=0;
 		 n=0;
-		 order_1=true;
+		 order=true;
 		 N=0;
 		 m=1;
 		 question="";
@@ -522,7 +521,7 @@ public class operation {
 				s=Double.parseDouble(topic[g-1])-Double.parseDouble(topic[g+1]);
 			    move(1);
 			    if(!checkBox_5.isSelected()&&s<0)
-			    	order_1=false;
+			    	order=false;
 			    return true;
 		}
 		return false;
@@ -553,7 +552,7 @@ public class operation {
 			if(g!=n-1&&kh()){}
 				g=i;
 				if(Double.parseDouble(topic[g+1])==0)
-					order_1=false;
+					order=false;
 				else{
 					s=Double.parseDouble(topic[g-1])/Double.parseDouble(topic[g+1]);
 				    move(1);
@@ -572,7 +571,7 @@ public class operation {
 		     g++;
 		if(g!=n-1&&topic[g].equals("(")){
 			move(2);
-			while(order_1){
+			while(order){
 				if(judge_sz(g))
 				     g++;
 			    if(topic[g].equals("("))
@@ -602,7 +601,7 @@ public class operation {
 				chengchu();
 			else if(judge_jiajian(g))
 					jiajian();
-			if(!order_1)
+			if(!order)
 				break;
 			if(g==n-1)
 				g=0;
@@ -617,30 +616,13 @@ public class operation {
 	}
 	//判断计算是否正确
 	boolean saomiao_js(){
-		order_1=true;
+		order=true;
 		keep();
 		answer();
-		if(!order_1)
+		if(!order)
 			return false;
 		else
 			return true;
-	}
-	//判断左括号是否正确
-	boolean kh_rule1(int j){
-		for(h=j;h<n;h++){
-			if(judge_kh1(h)){
-				if(!kh_rule1(h+1))
-					return false;
-			}
-			else if(judge_kh2(h)){
-				if(ok==1){
-				num[f]=h;
-				f+=1;
-				}
-				return true;
-			}
-		}
-		return false;	
 	}
 	//判断右括号是否正确
 	boolean kh_rule2(int j){
@@ -649,91 +631,13 @@ public class operation {
 				if(!kh_rule2(h-1))
 					return false;
 			}
-			else if(judge_kh1(h))
+			else if(judge_kh1(h)){
+					e=h;
+					f++;
 				return true;
+			}
 		}
 		return false;	
-	}
-	//删除重复括号
-	void delete_dykh_1(){
-		int x,y,z;
-			for(int i=0;i<n;i++){
-				 if(i!=n-1&&judge_kh1(i)&&judge_kh1(i+1)){
-					 x=0;y=0;z=0;
-					 f=0;
-					 kh_rule1(i+1);
-					 x=f;
-					 z=num[f-1];
-					 f=0;
-					 kh_rule1(i+2);
-					 y=f;
-					 if(x-y==1&&judge_kh2(z-1)){
-						g=z;move(2);count[m-1]--;
-						 g=i;move(2);count[m-2]--; 
-						 i--;
-						 }
-					 } 
-				  }
-	}
-	//删除无意义括号
-	boolean delete_dykh_2(int y){
-		int x,i;
-		boolean real=false;
-			for(e=y;e<n;e++){
-				 if(judge_kh1(e)){
-					 i=e;
-					 real=delete_dykh_2(e+1);
-					 e=i;
-					 f=0;
-					 kh_rule1(e+1);
-					 x=num[f-1];
-					 if(real||kh_meaning(e+1,x)){
-						 int z=0;
-						 if(e==0&&x==n-1||e==0&&judge_jiajian(x+1)||x==n-1&&judge_jiajian(e-1))
-							 z++;
-						 else if(e!=0&&x!=n-1){
-							 if(judge_jiajian(e-1)&&judge_jiajian(x+1)||judge_jiajian(e-1)&&judge_kh2(x+1)||judge_kh1(e-1)&&judge_jiajian(x+1))
-								 z++;
-						 }
-						 else if(z1==0&&z2!=0)
-							 z++;
-						 if(z!=0){
-							 g=x;move(2);count[m-1]--;
-							 g=e;move(2);count[m-2]--;
-						 }
-					 }
-				}
-				 else if(judge_kh2(e))
-					 return false;
-				  }
-			return true;
-	}
-	//判断括号内计算符号的意义
-	boolean kh_meaning(int x,int y){
-		z1=0;z2=0;
-		for(int i=x;i<y;i++){
-			if(judge_jiajian(i))
-				z1++;
-			else if(judge_chengchu(i))
-				z2++;
-		}
-		 if(z1!=0||z1==0&&z2!=0)
-			 return true;	
-		 else 
-			 return false;
-	}
-	//删除括号
-	boolean delete_kh(){
-		if(checkBox_kh.isSelected()){
-		   ok=1;
-		   delete_dykh_1();
-		   e=0;
-		   while(e<n){delete_dykh_2(e);e++;}
-		   ok=0;
-		   if(count[m-1]==0&&count[m-2]==0)
-			return false;
-		}
-		return true;
 	}
 	//统计计算符号或括号数量
 	void symbol_num(){
@@ -757,6 +661,64 @@ public class operation {
 			return false;
 		return true;
 	}
+	//计算括号内计算符号的数量
+	void kh_fh_num(int x,int y){
+		z1=0;z2=0;
+		for(int i=x;i<y;i++){
+			if(judge_jiajian(i))
+				z1++;
+			else if(judge_chengchu(i))
+				z2++;
+		}
+	}
+	//判断括号有无意义类型1
+	boolean kh_mean1(int j){
+		if(judge_kh2(j)){
+			f=0;kh_rule2(j-1);
+			if(e==0)
+				return false;
+			for(int i=e-1;i>=0;i--){
+				if(judge_jiajian(i))
+					return false;
+				else if(judge_chengchu(i))
+					return true;
+				else if(judge_kh1(i))
+					break;
+			}
+			kh_fh_num(e+1,j-1);
+			if(z1!=0&&z2!=0)
+				return true;
+			else
+				return false;
+		}
+		return true;
+	}
+	//判断括号有无意义类型2
+	boolean kh_mean2(int j){
+			f=0;kh_rule2(j);
+			kh_fh_num(e+1,j);
+			if(z1==0)
+				return false;
+		return true;
+	}
+	//判断括号有无意义类型3
+	boolean kh_mean3(int j){
+		f=0;kh_rule2(j);
+		if(e==0)
+			return false;
+	return true;
+}
+	//判断括号是否重复
+	boolean judge_cfkh(int j){
+		if(judge_kh2(j)){
+		int x,y,z;
+		f=0;kh_rule2(j);x=f;z=e;
+		f=0;kh_rule2(j-1);y=f;
+		if(x-y==1&&z!=n-1&&judge_kh1(z))
+			return true;
+		}
+		return false;
+	}
 	//练习题创造规则
 	boolean creat_rule(int j){
 		if(judge_sz(j)&&j!=0){
@@ -767,7 +729,7 @@ public class operation {
 			if(j==0)
 				return false;
 			else{
-			if(judge_jsfh(j-1)||judge_kh1(j-1))
+			if(judge_jsfh(j-1)||judge_kh1(j-1)||judge_jiajian(j)&&j!=1&&!kh_mean1(j-1))
 				return false;
 			}
 		}
@@ -777,17 +739,17 @@ public class operation {
 			
 		}
 		else if(judge_kh2(j)){
-			if(j==0)
+			if(j==0||j==1||j==2||j==3)
 				return false;
 			else{
-			if(judge_kh1(j-1)||judge_jsfh(j-1)||!kh_rule2(j-1)||judge_kh1(j-2))
-					return false;	
+			if(j==n-1&&!kh_mean3(j-1)||j==n-1&&!kh_mean1(j)||judge_kh1(j-1)||judge_jsfh(j-1)||judge_kh1(j-2)||!kh_rule2(j-1)||judge_cfkh(j-1)||!kh_mean2(j-1))
+					return false;
 			}
 		}
 		
 	return true;
 	
-}
+}	
 	//创造随机数
 	void creat_random(){
 		if(radiobutton_3.isSelected()){
@@ -816,7 +778,7 @@ public class operation {
 					g++;
 				}
 			if(saomiao_symbol()){
-				if(delete_kh()&&saomiao_js())
+				if(saomiao_js())
 					break;
 				else
 					g=0;	
@@ -835,7 +797,7 @@ public class operation {
 			}
 		question=question.concat("=\n");
 		text.setText(text.getText()+question);
-		order_1=true;g=0;question="";
+		order=true;g=0;question="";
 		t++;
 		}
 	}
