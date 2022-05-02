@@ -677,11 +677,9 @@ public class operation {
 			if(e==0)
 				return false;
 			for(int i=e-1;i>=0;i--){
-				if(judge_jiajian(i))
+				if(judge_jiajian(i)||judge_kh1(i)&&i!=0&&judge_kh1(i-1))
 					return false;
 				else if(judge_chengchu(i))
-					return true;
-				else if(judge_kh1(i))
 					break;
 			}
 			kh_fh_num(e+1,j-1);
