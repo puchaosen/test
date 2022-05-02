@@ -46,7 +46,6 @@ public class operation {
 	String[] xsws = new String[]{"0","0.0","0.00","0.000"};
 	int count[]=new int[]{0,0,0,0,0,0,0};
 	String[] operator = new String[10];
-	int[] num = new int[10];
 	String topic[] = new String[1000];
 	String topic_[] = new String[1000];
 	String max="",min="";
@@ -739,7 +738,7 @@ public class operation {
 			
 		}
 		else if(judge_kh2(j)){
-			if(j==0||j==1||j==2||j==3)
+			if(j<4)
 				return false;
 			else{
 			if(j==n-1&&!kh_mean3(j-1)||j==n-1&&!kh_mean1(j)||judge_kh1(j-1)||judge_jsfh(j-1)||judge_kh1(j-2)||!kh_rule2(j-1)||judge_cfkh(j-1)||!kh_mean2(j-1))
