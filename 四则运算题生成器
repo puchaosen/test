@@ -716,7 +716,7 @@ public class operation {
 		}
 		return false;
 	}
-	//计算右括号数量
+	//计算左括号数量
 	int num(int j){
 		int x=0;
 		for(int i=j;i>=0;i--){
